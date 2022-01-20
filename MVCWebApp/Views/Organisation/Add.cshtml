@@ -1,0 +1,49 @@
+﻿@model MVCWebApp.ViewModels.Organisation.CreateViewModel
+
+@{
+    ViewData["Title"] = "Add";
+}
+
+
+<div class="container">
+    <form method="post" asp-controller="Organisation" asp-action="Add">
+        <h3>Add Organisation</h3>
+        <div asp-validation-summary="All"></div>
+        <div class="row">
+            <div class="col-6">
+                <label asp-for="Name">Name</label>
+                <input asp-for="Name" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label asp-for="City">City</label>
+                <input asp-for="City" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label asp-for="State">State</label>
+                <input asp-for="State" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label asp-for="Country">Country</label>
+                <input asp-for="Country" class="form-control" />
+            </div>
+        </div>
+        <div class="pt-3">
+            <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+
+

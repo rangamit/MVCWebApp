@@ -1,0 +1,16 @@
+﻿@model MVCWebApp.ViewModels.Organisation.DeleteViewModel
+@{
+    ViewData["Title"] = "Delete";
+}
+<form method="post" asp-controller="Organisation" asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <div class="text-center">
+        <h2>You are about to delete the Organisation: @Model.Name</h2>
+        <h3>Are you sure?</h3>
+    </div>
+    <div class="text-center">
+        <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </div>
+</form>
+

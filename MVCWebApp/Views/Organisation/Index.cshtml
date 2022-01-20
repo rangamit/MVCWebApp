@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Organisations Page";
+}
+@model MVCWebApp.ViewModels.Organisation.IndexViewModel
+
+<div class="text-center">
+    <div>
+        <h3>
+            Organisations
+            <a href="@Url.Action("Add")" class="btn btn-primary">Add</a>
+        </h3>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Country</th>
+            <th></th>
+        </tr>
+        @foreach (var org in Model.Organisations)
+        {
+            <tr>
+                <td>@org.Id</td>
+                <td>@org.Name</td>
+                <td>@org.City</td>
+                <td>@org.State</td>
+                <td>@org.Country</td>
+                <th>
+                    <a href="@Url.Action("Update", new { id=  org.Id})" class="btn btn-primary">Edit</a>
+                    <a href="@Url.Action("Delete", new { id=  org.Id})" class="btn btn-danger">Delete</a>
+                </th>
+            </tr>
+        }
+    </table>
+</div>
