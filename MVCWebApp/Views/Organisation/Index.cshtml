@@ -29,6 +29,7 @@
                 <td>@org.State</td>
                 <td>@org.Country</td>
                 <th>
+                    <a href="@Url.Action("View", new { id=  org.Id})" class="btn btn-secondary">Details</a>
                     <a href="@Url.Action("Update", new { id=  org.Id})" class="btn btn-primary">Edit</a>
                     <a href="@Url.Action("Delete", new { id=  org.Id})" class="btn btn-danger">Delete</a>
                 </th>

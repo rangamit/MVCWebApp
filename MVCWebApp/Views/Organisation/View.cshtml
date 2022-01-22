@@ -1,0 +1,55 @@
+﻿@model MVCWebApp.ViewModels.Organisation.ViewModel;
+@{ ViewData["Title"] = "Details"; }
+
+<div class="container">
+
+    <h1 style=" color: mediumorchid; display: flex; justify-content: center; align-items: center;">Details</h1>
+
+    <h5>
+        Id:
+    </h5>
+
+    <h6>
+        @Html.DisplayFor(model => model.Id)
+    </h6>
+
+    <h5>
+        Name:
+    </h5>
+
+    <h6>
+        @Html.DisplayFor(model => model.Name)
+    </h6>
+
+      <h5>
+        City:
+        </h5>
+
+        <h6>
+            @Html.DisplayFor(model => model.City)
+        </h6>
+
+        <h5>
+          State:
+        </h5>
+
+        <h6>
+            @Html.DisplayFor(model => model.State)
+        </h6>
+
+        <h5>
+            Country:
+        </h5>
+
+        <h6>
+            @Html.DisplayFor(model => model.Country)
+        </h6>
+
+        <div class="pt-3">
+            <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
+        </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

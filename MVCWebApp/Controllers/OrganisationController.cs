@@ -95,5 +95,18 @@ namespace MVCWebApp.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        public IActionResult View(Guid id)
+        {
+            var viewId = staticOrganizations.FirstOrDefault(o => o.Id == id);
+            return View(new ViewModel
+            {
+                Id = viewId.Id,
+                City = viewId.City,
+                Country = viewId.Country,
+                Name = viewId.Name,
+                State = viewId.State,
+            });
+        }
     }
 }
