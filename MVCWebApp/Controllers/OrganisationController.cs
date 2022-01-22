@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MVCWebApp.Data;
 using MVCWebApp.Models;
 using MVCWebApp.ViewModels.Organisation;
 using System;
@@ -10,12 +11,17 @@ namespace MVCWebApp.Controllers
 {
     public class OrganisationController : Controller
     {
-        public static List<Organisation> staticOrganizations = new List<Organisation>();
+        private readonly ApplicationDBContext _dbContext;
+        public OrganisationController(ApplicationDBContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         public IActionResult Index()
         {
             IndexViewModel organisationViewModel = new IndexViewModel();
 
-            organisationViewModel.Organisations = staticOrganizations;
+            organisationViewModel.Organisations = _dbContext.Organisations.ToList();
 
             return View(organisationViewModel);
         }
@@ -30,21 +36,22 @@ namespace MVCWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                staticOrganizations.Add(new Organisation
+                var org = new Organisation
                 {
-                    Id = Guid.NewGuid(),
                     City = createViewModel.City,
                     Country = createViewModel.Country,
                     Name = createViewModel.Name,
                     State = createViewModel.State,
-                });
+                };
+                _dbContext.Organisations.Add(org);
+                _dbContext.SaveChanges();
             }
             return RedirectToAction("Index");
         }
 
         public IActionResult Update(Guid id)
         {
-            var org = staticOrganizations.FirstOrDefault(o => o.Id == id);
+            var org = _dbContext.Organisations.FirstOrDefault(o => o.Id == id);
 
             return View(new UpdateViewModel
             {
@@ -61,13 +68,14 @@ namespace MVCWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var org = staticOrganizations.FirstOrDefault(o => o.Id == updateViewModel.Id);
+                var org = _dbContext.Organisations.FirstOrDefault(o => o.Id == updateViewModel.Id);
                 if (org != null)
                 {
                     org.City = updateViewModel.City;
                     org.Country = updateViewModel.Country;
                     org.Name = updateViewModel.Name;
                     org.State = updateViewModel.State;
+                    _dbContext.SaveChanges();
                 }
 
             }
@@ -76,7 +84,7 @@ namespace MVCWebApp.Controllers
 
         public IActionResult Delete(Guid id)
         {
-            var org = staticOrganizations.FirstOrDefault(o => o.Id == id);
+            var org =  _dbContext.Organisations.FirstOrDefault(o => o.Id == id);
 
             return View(new DeleteViewModel
             {
@@ -88,17 +96,18 @@ namespace MVCWebApp.Controllers
         [HttpPost]
         public IActionResult Delete([Bind] DeleteViewModel deleteViewModel)
         {
-            var org = staticOrganizations.FirstOrDefault(o => o.Id == deleteViewModel.Id);
+            var org = _dbContext.Organisations.FirstOrDefault(o => o.Id == deleteViewModel.Id);
             if (org != null)
             {
-                staticOrganizations.Remove(org);
+                _dbContext.Organisations.Remove(org);
+                _dbContext.SaveChanges();
             }
             return RedirectToAction("Index");
         }
 
         public IActionResult View(Guid id)
         {
-            var viewId = staticOrganizations.FirstOrDefault(o => o.Id == id);
+            var viewId = _dbContext.Organisations.FirstOrDefault(o => o.Id == id);
             return View(new ViewModel
             {
                 Id = viewId.Id,
