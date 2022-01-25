@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using MVCWebApp.Actions.Commands;
+using MVCWebApp.Actions.Queries;
 using MVCWebApp.Data;
 using MVCWebApp.Models;
 using MVCWebApp.ViewModels.Organisation;
@@ -12,16 +15,18 @@ namespace MVCWebApp.Controllers
     public class OrganisationController : Controller
     {
         private readonly ApplicationDBContext _dbContext;
-        public OrganisationController(ApplicationDBContext dbContext)
+        private readonly IMediator _mediator;
+        public OrganisationController(ApplicationDBContext dbContext, IMediator mediator)
         {
             _dbContext = dbContext;
+            _mediator = mediator;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             IndexViewModel organisationViewModel = new IndexViewModel();
 
-            organisationViewModel.Organisations = _dbContext.Organisations.ToList();
+            organisationViewModel.Organisations = await _mediator.Send(new GetAllOrganisationsQuery());
 
             return View(organisationViewModel);
         }
@@ -32,19 +37,11 @@ namespace MVCWebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add([Bind] CreateViewModel createViewModel)
+        public async Task<IActionResult> Add([Bind] CreateViewModel createViewModel)
         {
             if (ModelState.IsValid)
             {
-                var org = new Organisation
-                {
-                    City = createViewModel.City,
-                    Country = createViewModel.Country,
-                    Name = createViewModel.Name,
-                    State = createViewModel.State,
-                };
-                _dbContext.Organisations.Add(org);
-                _dbContext.SaveChanges();
+                await _mediator.Send(new CreateOrganisationCommand(createViewModel.Name, createViewModel.City, createViewModel.State, createViewModel.Country));
             }
             return RedirectToAction("Index");
         }
@@ -84,7 +81,7 @@ namespace MVCWebApp.Controllers
 
         public IActionResult Delete(Guid id)
         {
-            var org =  _dbContext.Organisations.FirstOrDefault(o => o.Id == id);
+            var org = _dbContext.Organisations.FirstOrDefault(o => o.Id == id);
 
             return View(new DeleteViewModel
             {
