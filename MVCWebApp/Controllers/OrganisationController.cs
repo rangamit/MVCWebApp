@@ -61,20 +61,11 @@ namespace MVCWebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update([Bind] UpdateViewModel updateViewModel)
+        public async Task<IActionResult> Update([Bind] UpdateViewModel updateViewModel)
         {
             if (ModelState.IsValid)
             {
-                var org = _dbContext.Organisations.FirstOrDefault(o => o.Id == updateViewModel.Id);
-                if (org != null)
-                {
-                    org.City = updateViewModel.City;
-                    org.Country = updateViewModel.Country;
-                    org.Name = updateViewModel.Name;
-                    org.State = updateViewModel.State;
-                    _dbContext.SaveChanges();
-                }
-
+                await _mediator.Send(new UpdateOrganisationCommand(updateViewModel.Id, updateViewModel.Name, updateViewModel.City, updateViewModel.State, updateViewModel.Country));
             }
             return RedirectToAction("Index");
         }
@@ -91,28 +82,22 @@ namespace MVCWebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete([Bind] DeleteViewModel deleteViewModel)
+        public async Task<IActionResult> Delete([Bind] DeleteViewModel deleteViewModel)
         {
-            var org = _dbContext.Organisations.FirstOrDefault(o => o.Id == deleteViewModel.Id);
-            if (org != null)
+
+            if (ModelState.IsValid)
             {
-                _dbContext.Organisations.Remove(org);
-                _dbContext.SaveChanges();
+                await _mediator.Send(new DeleteOrganisationCommand(deleteViewModel.Id, deleteViewModel.Name));
             }
             return RedirectToAction("Index");
+
         }
 
-        public IActionResult View(Guid id)
+        public async Task<IActionResult> View(Guid id)
         {
-            var viewId = _dbContext.Organisations.FirstOrDefault(o => o.Id == id);
-            return View(new ViewModel
-            {
-                Id = viewId.Id,
-                City = viewId.City,
-                Country = viewId.Country,
-                Name = viewId.Name,
-                State = viewId.State,
-            });
+            var org = await _mediator.Send(new GetOrganisationQuery(id));
+
+            return View(new ViewModel { City = org.City, Id = org.Id, Name = org.Name, Country = org.Country, State = org.State });
         }
     }
 }
