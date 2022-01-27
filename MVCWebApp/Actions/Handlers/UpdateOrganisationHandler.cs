@@ -22,18 +22,16 @@ namespace MVCWebApp.Actions.Handlers
         {
             var org = _dBContext.Organisations.FirstOrDefault(o => o.Id == request.Id);
 
-             org = new Models.Organisation
+            if (org != null)
             {
-                Name = request.Name,
-                City = request.City,
-                State = request.State,
-                Country = request.Country
-            };
-            _dBContext.Organisations.Update(org);
-            await _dBContext.SaveChangesAsync();
+                org.City = request.City;
+                org.Country = request.Country;
+                org.Name = request.Name;
+                org.State = request.State;
+                await _dBContext.SaveChangesAsync();
+            }
+            
             return org;
-
-            //throw new NotImplementedException();
         }
     }
 }
