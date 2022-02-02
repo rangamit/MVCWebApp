@@ -43,5 +43,54 @@ namespace WebAPI.Controllers
 
             return Ok();
         }
+
+ 
+
+        [HttpPost("UpdateOrganisation")]
+        public IActionResult UpdateOrganisation([Bind] UpdateViewModel updateViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var org = _dbContext.Organisations.FirstOrDefault(o => o.Id == updateViewModel.Id);
+                if (org != null)
+                {
+                    org.City = updateViewModel.City;
+                    org.Country = updateViewModel.Country;
+                    org.Name = updateViewModel.Name;
+                    org.State = updateViewModel.State;
+                    _dbContext.SaveChanges();
+                }
+
+            }
+            return Ok();
+        }
+
+
+        [HttpDelete("DeleteOrganisation/{Id}")]
+        public IActionResult DeleteOrganisation(Guid id)
+        {
+            var org = _dbContext.Organisations.FirstOrDefault(o => o.Id == id);
+            if (org != null)
+            {
+                _dbContext.Organisations.Remove(org);
+                _dbContext.SaveChanges();
+            }
+            return Ok();
+        }
+
+        [HttpGet("DetailOrganisation/{Id}")]
+        public IActionResult DetailOrganisation(Guid id)
+        {
+            var viewId = _dbContext.Organisations.FirstOrDefault(o => o.Id == id);
+            return Ok(new DetailViewModel
+            {
+                Id = viewId.Id,
+                City = viewId.City,
+                Country = viewId.Country,
+                Name = viewId.Name,
+                State = viewId.State,
+            });
+        }
+
     }
 }
