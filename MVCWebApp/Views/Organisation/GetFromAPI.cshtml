@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Organisations Page";
+}
+
+<div class="text-center">
+    <div>
+        <h3>
+            Organisations From API <a target="_blank" href="https://localhost:44322/api/Organisation">https://localhost:44322/api/Organisation</a> 
+        </h3>
+    </div>
+
+    <div id="organisations"></div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.getJSON("https://localhost:44322/api/Organisation")
+                .done(function (data) {
+                    var orgHtmlTable = `<table class="table">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>City</th>
+                                            <th>State</th>
+                                            <th>Country</th>
+                                        </tr>`;
+
+                    $.each(data, function (index, val) {
+                        orgHtmlTable = orgHtmlTable + `<tr>
+                                        <td>`+ val.id + `</td>
+                                        <td>`+ val.name + `</td>
+                                        <td>`+ val.city + `</td>
+                                        <td>`+ val.state + `</td>
+                                        <td>`+ val.country + `</td>
+                                    </tr>`;
+                    });
+
+                    orgHtmlTable = orgHtmlTable + `</table>`;
+
+                    $("#organisations").html(orgHtmlTable);
+                });
+        });
+    </script>
+}

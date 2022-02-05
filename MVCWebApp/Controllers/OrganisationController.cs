@@ -30,7 +30,12 @@ namespace MVCWebApp.Controllers
 
             return View(organisationViewModel);
         }
-
+       
+        public IActionResult GetFromAPI()
+        {
+            return View();
+        }
+        
         public IActionResult Add()
         {
             return View();

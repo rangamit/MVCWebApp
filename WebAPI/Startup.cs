@@ -27,8 +27,12 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(c =>
+                c.AddPolicy("AllowOrigin", opt =>
+                    opt.WithOrigins("https://localhost:44374")));
+
             services.AddDbContext<ApplicationDBContext>(options =>
-              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));            
 
             services.AddControllers();
         }
@@ -45,6 +49,8 @@ namespace WebAPI
 
             app.UseRouting();
 
+            app.UseCors(opt => opt.WithOrigins("https://localhost:44374"));
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
